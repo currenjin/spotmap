@@ -511,9 +511,9 @@ body {
 
 .nav-btn {
   flex: 1;
-  padding: 10px 0;
+  padding: 16px 0;
   font-family: var(--font-display);
-  font-size: 12px;
+  font-size: 16px;
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
