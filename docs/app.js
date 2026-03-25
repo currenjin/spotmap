@@ -299,16 +299,11 @@ function setRadius(km) {
 async function fetchSubwayStations() {
   const bounds = map.getBounds();
   const bbox = `${bounds.getSouth()},${bounds.getWest()},${bounds.getNorth()},${bounds.getEast()}`;
-  const query = `
-    [out:json][timeout:25];
-    node["railway"="station"]["station"="subway"](${bbox})->.s;
-    rel["route"="subway"](bn.s);
-    out tags members qt;
-    .s out tags qt;
-  `;
+  const query = `[out:json][timeout:25];(node["railway"="station"]["station"="subway"](${bbox});relation["route"="subway"](${bbox}););out tags members qt;`;
   const url = `https://overpass-api.de/api/interpreter?data=${encodeURIComponent(query)}`;
   try {
     const res = await fetch(url);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
 
     const lineMap = {};
@@ -333,10 +328,7 @@ async function fetchSubwayStations() {
       const colors = lines.map(l => l.colour);
       const lineLabels = [...new Set(lines.map(l => l.ref ? `${l.ref}호선` : ''))].filter(Boolean);
 
-      const tooltipHtml = `
-        <span style="font-weight:600">${name}</span>
-        ${lineLabels.length ? `<br><span style="font-size:10px;opacity:0.8">${lineLabels.join(' · ')}</span>` : ''}
-      `;
+      const tooltipHtml = `<span style="font-weight:600">${name}</span>${lineLabels.length ? `<br><span style="font-size:10px;opacity:0.8">${lineLabels.join(' · ')}</span>` : ''}`;
 
       const marker = L.marker([el.lat, el.lon], {
         icon: subwayDotIcon(colors),
