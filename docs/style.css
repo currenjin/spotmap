@@ -26,8 +26,8 @@ body {
    Sidebar
 ───────────────────────────── */
 #sidebar {
-  width: 380px;
-  min-width: 380px;
+  width: 440px;
+  min-width: 440px;
   display: flex;
   flex-direction: column;
   background: var(--white);
@@ -47,7 +47,7 @@ body {
 
 #sidebar h1 {
   font-family: var(--font-display);
-  font-size: 56px;
+  font-size: 68px;
   font-weight: 900;
   color: var(--white);
   line-height: 0.88;
@@ -57,7 +57,7 @@ body {
 
 .slogan {
   margin-top: 14px;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 400;
   letter-spacing: 0.05em;
   color: var(--gold);
@@ -104,12 +104,12 @@ body {
 #filters { display: flex; gap: 4px; flex: 1; flex-wrap: wrap; }
 
 .filter-btn {
-  padding: 5px 12px;
+  padding: 6px 14px;
   border: 1px solid rgba(255,255,255,0.2);
   border-radius: 0;
   background: transparent;
   font-family: var(--font-display);
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -127,12 +127,12 @@ body {
 }
 
 #btn-sort {
-  padding: 5px 12px;
+  padding: 6px 14px;
   border: 1px solid rgba(255,255,255,0.2);
   border-radius: 0;
   background: transparent;
   font-family: var(--font-display);
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -202,7 +202,7 @@ body {
 }
 #list-count {
   font-family: var(--font-display);
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 700;
   color: var(--text-muted);
   letter-spacing: 0.12em;
@@ -273,7 +273,7 @@ body {
 
 .spot-name {
   font-family: var(--font-display);
-  font-size: 17px;
+  font-size: 19px;
   font-weight: 700;
   letter-spacing: -0.2px;
   text-transform: uppercase;
@@ -287,7 +287,7 @@ body {
 .spot-category {
   display: inline-block;
   font-family: var(--font-display);
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -297,7 +297,7 @@ body {
 }
 
 .spot-address {
-  font-size: 11.5px;
+  font-size: 12.5px;
   color: #aaa;
   white-space: nowrap;
   overflow: hidden;
@@ -382,7 +382,7 @@ body {
 #detail-panel {
   position: fixed;
   bottom: 0;
-  left: 380px;
+  left: 440px;
   width: 380px;
   max-height: 68vh;
   background: var(--white);
@@ -554,7 +554,7 @@ body {
 @media (max-width: 600px) {
   #app { flex-direction: column; }
   #sidebar { width: 100%; min-width: 0; height: 44vh; border-right: none; border-top: 2px solid var(--gold); order: 2; }
-  #sidebar h1 { font-size: 42px; }
+  #sidebar h1 { font-size: 50px; }
   #map-wrap { height: 56vh; order: 1; }
   #detail-panel { left: 0 !important; width: 100% !important; }
   #btn-locate { bottom: 12px; right: 12px; }
