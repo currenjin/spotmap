@@ -35,35 +35,84 @@ function createMarkerIcon(category) {
   });
 }
 
-const subwayIcon = L.divIcon({
-  className: '',
-  html: `<div style="
-    width:8px; height:8px; border-radius:50%;
-    background:#555; border:1.5px solid #fff;
-    box-shadow:0 1px 3px rgba(0,0,0,0.3);
-  "></div>`,
-  iconSize: [8, 8],
-  iconAnchor: [4, 4],
-});
+function subwayDotIcon(colors) {
+  const dots = colors.map(c => `<span style="
+    display:inline-block; width:8px; height:8px; border-radius:50%;
+    background:${c}; border:1px solid rgba(255,255,255,0.6); margin-right:1px;
+  "></span>`).join('');
+  const bg = colors[0] || '#555';
+  return L.divIcon({
+    className: '',
+    html: `<div style="
+      width:10px; height:10px; border-radius:50%;
+      background:${bg}; border:1.5px solid #fff;
+      box-shadow:0 1px 3px rgba(0,0,0,0.35);
+    "></div>`,
+    iconSize: [10, 10],
+    iconAnchor: [5, 5],
+  });
+}
 
 async function fetchSubwayStations() {
   const bounds = map.getBounds();
   const bbox = `${bounds.getSouth()},${bounds.getWest()},${bounds.getNorth()},${bounds.getEast()}`;
-  const query = `[out:json][timeout:10];node["railway"="station"]["subway"="yes"](${bbox});out;`;
+
+  // 역 노드 + 역이 속한 노선 relation을 함께 가져옴
+  const query = `
+    [out:json][timeout:20];
+    node["railway"="station"]["subway"="yes"](${bbox})->.s;
+    rel["route"="subway"](bn.s);
+    out tags members qt;
+    .s out tags qt;
+  `;
   const url = `https://overpass-api.de/api/interpreter?data=${encodeURIComponent(query)}`;
 
   try {
     const res = await fetch(url);
     const data = await res.json();
 
+    // 노선 relation 파싱: nodeId → [{ref, colour, name}]
+    const lineMap = {};
+    data.elements.forEach(el => {
+      if (el.type !== 'relation') return;
+      const ref = el.tags?.ref || '';
+      const colour = el.tags?.colour || el.tags?.color || '#888';
+      const lineName = el.tags?.name || (ref ? `${ref}호선` : '');
+      (el.members || []).forEach(m => {
+        if (m.type !== 'node') return;
+        if (!lineMap[m.ref]) lineMap[m.ref] = [];
+        lineMap[m.ref].push({ ref, colour, name: lineName });
+      });
+    });
+
     subwayMarkers.forEach(m => m.remove());
     subwayMarkers = [];
 
     data.elements.forEach(el => {
+      if (el.type !== 'node') return;
       const name = el.tags?.name || '';
-      const marker = L.marker([el.lat, el.lon], { icon: subwayIcon, zIndexOffset: -100 })
-        .addTo(map);
-      if (name) marker.bindTooltip(name, { permanent: false, direction: 'top', offset: [0, -6], className: 'subway-tooltip' });
+      const lines = lineMap[el.id] || [];
+      const colors = lines.map(l => l.colour);
+      const lineLabels = [...new Set(lines.map(l => l.ref ? `${l.ref}호선` : l.name))].filter(Boolean);
+
+      const tooltipHtml = `
+        <span style="font-weight:600">${name}</span>
+        ${lineLabels.length ? `<br><span style="font-size:10px;opacity:0.85">${lineLabels.join(' · ')}</span>` : ''}
+      `;
+
+      const marker = L.marker([el.lat, el.lon], {
+        icon: subwayDotIcon(colors),
+        zIndexOffset: -100,
+      }).addTo(map);
+
+      if (name) {
+        marker.bindTooltip(tooltipHtml, {
+          permanent: true,
+          direction: 'top',
+          offset: [0, -8],
+          className: 'subway-tooltip',
+        });
+      }
       subwayMarkers.push(marker);
     });
   } catch (e) {
