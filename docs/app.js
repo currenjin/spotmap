@@ -23,7 +23,7 @@ let radiusKm = 0;
 let userLocation = null;
 let userMarker = null;
 let userCircle = null;
-let favorites = new Set(JSON.parse(localStorage.getItem('spotmap_favorites') || '[]'));
+let favorites = new Set(JSON.parse(localStorage.getItem('tryagain_favorites') || '[]'));
 let map;
 let subwayFetchTimer = null;
 
@@ -42,7 +42,7 @@ function formatDistance(km) {
 }
 
 function saveFavorites() {
-  localStorage.setItem('spotmap_favorites', JSON.stringify([...favorites]));
+  localStorage.setItem('tryagain_favorites', JSON.stringify([...favorites]));
 }
 
 function toggleFavorite(id, e) {
