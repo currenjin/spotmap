@@ -37,31 +37,41 @@ body {
 }
 
 #sidebar header {
-  padding: 28px 22px 18px;
+  padding: 36px 26px 22px;
   background: var(--black);
-  border-bottom: 2px solid var(--gold);
+  border-bottom: 4px solid var(--gold);
 }
 
 /* Brand */
 #brand { margin-bottom: 18px; }
+#brand::after {
+  content: '';
+  display: block;
+  width: 52px;
+  height: 2px;
+  background: var(--gold);
+  margin-top: 18px;
+}
 
 #sidebar h1 {
   font-family: var(--font-display);
-  font-size: 68px;
+  font-size: 84px;
   font-weight: 900;
   color: var(--white);
-  line-height: 0.88;
+  line-height: 0.85;
   text-transform: uppercase;
-  letter-spacing: -1px;
+  letter-spacing: -2px;
 }
 
 .slogan {
   margin-top: 14px;
-  font-size: 17px;
-  font-weight: 400;
-  letter-spacing: 0.05em;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
   color: var(--gold);
-  line-height: 1.5;
+  line-height: 1.6;
+  opacity: 0.85;
 }
 
 /* Search */
@@ -120,9 +130,9 @@ body {
 }
 .filter-btn:hover { border-color: rgba(255,255,255,0.6); color: var(--white); }
 .filter-btn.active {
-  background: var(--white);
+  background: var(--gold);
   color: var(--black);
-  border-color: var(--white);
+  border-color: var(--gold);
   font-weight: 900;
 }
 
@@ -232,6 +242,7 @@ body {
   counter-increment: spot-counter;
 }
 .spot-item:hover { background: var(--surface); }
+.spot-item:hover::before { opacity: 1; }
 .spot-item.active {
   background: #fdf8ee;
   border-left: 3px solid var(--gold);
@@ -242,12 +253,13 @@ body {
 .spot-item::before {
   content: counter(spot-counter, decimal-leading-zero);
   font-family: var(--font-display);
-  font-size: 12px;
-  font-weight: 700;
+  font-size: 15px;
+  font-weight: 900;
   color: var(--gold);
   letter-spacing: 0.04em;
-  min-width: 30px;
+  min-width: 36px;
   flex-shrink: 0;
+  opacity: 0.7;
 }
 
 .spot-thumb {
