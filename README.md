@@ -1,31 +1,37 @@
-# spotmap
+# tryagain
 
-내 주변 스케이트보드 스팟을 지도와 리스트로 확인하는 개인 프로젝트.
+> 스케이트는 끊임없는 자기혐오
+
+내 주변 스케이트보드 스팟 — 공원, 파크, 스트리트, 샵 전부.
+
+[→ 열어보기](https://currenjin.github.io/tryagain/)
+
+---
 
 ## 구조
 
 ```
-spotmap/
-├── data/
-│   └── spots.json     # 크롤링된 스팟 데이터
+tryagain/
 ├── crawler/
-│   └── ksbf.py        # ksbf.kr/Skatemap 크롤러
+│   └── ksbf.py        # ksbf.kr 크롤러
 └── docs/              # GitHub Pages
     ├── index.html
     ├── app.js
-    └── style.css
+    ├── style.css
+    └── data/
+        └── spots.json
 ```
 
 ## 데이터 업데이트
 
 ```bash
-cd crawler
-python ksbf.py
+python crawler/ksbf.py
 ```
+
+매주 월요일 자동 업데이트 (GitHub Actions).
 
 ## 로컬 실행
 
 ```bash
-cd docs
-python -m http.server 8000
+cd docs && python -m http.server 8000
 ```

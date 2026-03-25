@@ -15,7 +15,6 @@ const CATEGORY_COLOR = {
 // ── State ──
 let allSpots = [];
 let clusterGroup;
-let subwayMarkers = [];
 let activeFilter = '전체';
 let searchQuery = '';
 let sortByDistance = false;
@@ -25,7 +24,6 @@ let userMarker = null;
 let userCircle = null;
 let favorites = new Set(JSON.parse(localStorage.getItem('tryagain_favorites') || '[]'));
 let map;
-let subwayFetchTimer = null;
 
 // ── Helpers ──
 function calcDistance(lat1, lng1, lat2, lng2) {
@@ -101,19 +99,6 @@ function createMarkerIcon(category, isFav) {
   });
 }
 
-function subwayDotIcon(colors) {
-  const bg = colors[0] || '#555';
-  return L.divIcon({
-    className: '',
-    html: `<div style="
-      width:13px; height:13px; border-radius:50%;
-      background:${bg}; border:2px solid #fff;
-      box-shadow:0 1px 4px rgba(0,0,0,0.35);
-    "></div>`,
-    iconSize: [13, 13],
-    iconAnchor: [6, 6],
-  });
-}
 
 // ── Render list ──
 function renderList(spots) {
@@ -295,54 +280,12 @@ function setRadius(km) {
   refresh();
 }
 
-// ── Subway stations ──
-async function fetchSubwayStations() {
-  const bounds = map.getBounds();
-  const bbox = `${bounds.getSouth()},${bounds.getWest()},${bounds.getNorth()},${bounds.getEast()}`;
-  const query = `[out:json][timeout:20];node["railway"="station"]["station"="subway"](${bbox});out tags qt;`;
-  const url = `https://overpass-api.de/api/interpreter?data=${encodeURIComponent(query)}`;
-  try {
-    const res = await fetch(url);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const data = await res.json();
-
-    subwayMarkers.forEach(m => m.remove());
-    subwayMarkers = [];
-
-    data.elements.forEach(el => {
-      if (el.type !== 'node' || !el.lat || !el.lon) return;
-      const name = el.tags?.name || '';
-      const color = el.tags?.colour || el.tags?.color || '#777';
-      const line = el.tags?.['network:short'] || el.tags?.line || '';
-
-      const tooltipHtml = `<span style="font-weight:600">${name}</span>${line ? `<br><span style="font-size:10px;opacity:0.75">${line}</span>` : ''}`;
-
-      const marker = L.marker([el.lat, el.lon], {
-        icon: subwayDotIcon([color]),
-        zIndexOffset: -100,
-      }).addTo(map);
-
-      if (name) marker.bindTooltip(tooltipHtml, {
-        permanent: true, direction: 'top', offset: [0, -8], className: 'subway-tooltip',
-      });
-      subwayMarkers.push(marker);
-    });
-  } catch (e) { console.warn('subway fetch failed:', e); }
-}
-
-function scheduleSubwayFetch() {
-  clearTimeout(subwayFetchTimer);
-  subwayFetchTimer = setTimeout(() => {
-    if (map.getZoom() >= 13) fetchSubwayStations();
-    else { subwayMarkers.forEach(m => m.remove()); subwayMarkers = []; }
-  }, 600);
-}
 
 // ── Init ──
 async function init() {
   map = L.map('map').setView([37.5665, 126.978], 11);
 
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
     attribution: '© OpenStreetMap contributors © CARTO',
     maxZoom: 19,
   }).addTo(map);
@@ -358,8 +301,6 @@ async function init() {
   allSpots = await res.json();
   refresh();
 
-  map.on('moveend', scheduleSubwayFetch);
-  scheduleSubwayFetch();
   map.on('locationfound', onLocationFound);
 
   document.getElementById('btn-locate').addEventListener('click', locateMe);
