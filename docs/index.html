@@ -57,6 +57,31 @@
             <button class="radius-btn" data-km="10">10km</button>
           </div>
         </div>
+        <div id="trick-controls" class="hidden">
+          <div id="trick-filters">
+            <div class="trick-filter-row">
+              <span class="trick-filter-label">난이도</span>
+              <div class="trick-filter-btns">
+                <button class="trick-diff-btn filter-btn active" data-difficulty="전체">전체</button>
+                <button class="trick-diff-btn filter-btn" data-difficulty="입문">입문</button>
+                <button class="trick-diff-btn filter-btn" data-difficulty="초급">초급</button>
+                <button class="trick-diff-btn filter-btn" data-difficulty="중급">중급</button>
+                <button class="trick-diff-btn filter-btn" data-difficulty="고급">고급</button>
+              </div>
+            </div>
+            <div class="trick-filter-row">
+              <span class="trick-filter-label">종류</span>
+              <div class="trick-filter-btns">
+                <button class="trick-cat-btn filter-btn active" data-trickcat="전체">전체</button>
+                <button class="trick-cat-btn filter-btn" data-trickcat="flat">Flat</button>
+                <button class="trick-cat-btn filter-btn" data-trickcat="ledge">Ledge</button>
+                <button class="trick-cat-btn filter-btn" data-trickcat="rail">Rail</button>
+                <button class="trick-cat-btn filter-btn" data-trickcat="transition">Trans</button>
+              </div>
+            </div>
+          </div>
+          <button id="btn-trick-sort" data-active="false">↕ 난이도순</button>
+        </div>
       </header>
       <div id="list-meta"><span id="list-count"></span></div>
       <ul id="spot-list"></ul>

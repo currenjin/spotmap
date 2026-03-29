@@ -187,6 +187,68 @@ body {
   font-weight: 900;
 }
 
+/* Trick controls */
+#trick-controls {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+#trick-controls.hidden { display: none; }
+
+#trick-filters {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.trick-filter-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.trick-filter-label {
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.35);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  white-space: nowrap;
+  min-width: 36px;
+}
+
+.trick-filter-btns {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+#btn-trick-sort {
+  padding: 7px 15px;
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 0;
+  background: transparent;
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  color: rgba(255,255,255,0.55);
+  white-space: nowrap;
+  transition: all 0.1s;
+  align-self: flex-start;
+}
+#btn-trick-sort:hover { border-color: rgba(255,255,255,0.6); color: var(--white); }
+#btn-trick-sort[data-active="true"] {
+  background: var(--gold);
+  color: var(--black);
+  border-color: var(--gold);
+  font-weight: 900;
+}
+
 /* Radius filter */
 #radius-row {
   display: flex;
@@ -713,6 +775,17 @@ body {
   .detail-address { font-size: 12px; }
   .detail-nav { margin-top: 12px; padding-top: 12px; }
   .nav-btn { padding: 12px 0; font-size: 15px; }
+
+  /* Trick controls mobile */
+  .trick-filter-row { gap: 4px; }
+  .trick-filter-label { font-size: 11px; min-width: 30px; }
+  .trick-filter-btns .filter-btn { padding: 4px 8px; font-size: 12px; }
+  #btn-trick-sort { padding: 5px 10px; font-size: 13px; }
+
+  #trick-list { flex: 1; overflow-y: auto; }
+  .trick-item { padding: 10px 16px; }
+  .trick-name { font-size: 17px; }
+  .trick-summary { font-size: 12px; }
 
   #btn-locate { bottom: 12px; right: 16px; padding: 9px 18px; font-size: 12px; }
 }

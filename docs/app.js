@@ -18,6 +18,9 @@ let clusterGroup;
 let activeFilter = '전체';
 let activeView = 'spots';
 let searchQuery = '';
+let trickDifficultyFilter = '전체';
+let trickCategoryFilter = '전체';
+let trickSortMode = 'difficulty';
 let sortByDistance = false;
 let radiusKm = 0;
 let userLocation = null;
@@ -84,6 +87,15 @@ function getFilteredSpots() {
 
 function getFilteredTricks() {
   let tricks = [...allTricks];
+
+  if (trickDifficultyFilter !== '전체') {
+    tricks = tricks.filter(t => t.difficulty === trickDifficultyFilter);
+  }
+
+  if (trickCategoryFilter !== '전체') {
+    tricks = tricks.filter(t => t.category === trickCategoryFilter);
+  }
+
   if (searchQuery) {
     const q = searchQuery.toLowerCase();
     tricks = tricks.filter(t =>
@@ -93,8 +105,14 @@ function getFilteredTricks() {
     );
   }
 
-  const order = { '입문': 1, '초급': 2, '중급': 3, '고급': 4 };
-  return tricks.sort((a, b) => (order[a.difficulty] || 99) - (order[b.difficulty] || 99));
+  if (trickSortMode === 'difficulty') {
+    const order = { '입문': 1, '초급': 2, '중급': 3, '고급': 4 };
+    tricks.sort((a, b) => (order[a.difficulty] || 99) - (order[b.difficulty] || 99));
+  } else {
+    tricks.sort((a, b) => a.name.localeCompare(b.name));
+  }
+
+  return tricks;
 }
 
 function createMarkerIcon(category, isFav) {
@@ -198,6 +216,7 @@ function refresh() {
     spotList.classList.remove('hidden');
     trickList.classList.add('hidden');
     document.getElementById('controls').classList.remove('hidden');
+    document.getElementById('trick-controls').classList.add('hidden');
     const spots = getFilteredSpots();
     renderList(spots);
     renderMarkers(spots);
@@ -206,6 +225,7 @@ function refresh() {
     trickList.classList.remove('hidden');
     document.getElementById('controls').classList.add('hidden');
     document.getElementById('radius-row').classList.add('hidden');
+    document.getElementById('trick-controls').classList.remove('hidden');
     renderMarkers([]);
     const tricks = getFilteredTricks();
     renderTrickList(tricks);
@@ -448,10 +468,10 @@ async function init() {
     refresh();
   });
 
-  document.querySelectorAll('.filter-btn').forEach(btn => {
+  document.querySelectorAll('#filters .filter-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       activeFilter = btn.dataset.category;
-      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('#filters .filter-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       refresh();
     });
@@ -463,6 +483,32 @@ async function init() {
 
   document.querySelectorAll('.view-tab').forEach(btn => {
     btn.addEventListener('click', () => switchView(btn.dataset.view));
+  });
+
+  document.querySelectorAll('.trick-diff-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      trickDifficultyFilter = btn.dataset.difficulty;
+      document.querySelectorAll('.trick-diff-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      refresh();
+    });
+  });
+
+  document.querySelectorAll('.trick-cat-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      trickCategoryFilter = btn.dataset.trickcat;
+      document.querySelectorAll('.trick-cat-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      refresh();
+    });
+  });
+
+  document.getElementById('btn-trick-sort').addEventListener('click', () => {
+    trickSortMode = trickSortMode === 'difficulty' ? 'name' : 'difficulty';
+    const btn = document.getElementById('btn-trick-sort');
+    btn.textContent = trickSortMode === 'difficulty' ? '↕ 난이도순' : '↕ 이름순';
+    btn.dataset.active = trickSortMode === 'name';
+    refresh();
   });
 }
 
