@@ -532,7 +532,8 @@ body {
 }
 
 /* Tricks split: sidebar narrows when detail is open */
-#app.view-tricks:has(#detail-panel:not(.hidden)) #sidebar {
+#app.view-tricks:has(#detail-panel:not(.hidden)) #sidebar,
+body:has(#app.view-tricks #detail-panel:not(.hidden)) #sidebar {
   flex: none;
   width: 440px;
   min-width: 440px;
